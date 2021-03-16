@@ -784,6 +784,6 @@ packages:
       integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 specifiers:
   svelte: ^3.29.4
-  swrev: ^1.7.0
+  swrev: github:Evertt/swrev
   tsup: ^3.7.1
   typescript: ^4.0.5
