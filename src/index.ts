@@ -24,13 +24,17 @@ export class SSWR extends SWR {
 
     data.then = (onfulfilled) => {
       return new Promise(resolve => {
-        const unsubscribe = data.subscribe(payload => {
+        let result: any = undefined
+        let unsubscribe = () => {}
+        unsubscribe = data.subscribe(payload => {
           if (payload !== undefined) {
             unsubscribe()
+            result = payload
             const res = onfulfilled?.(payload)
             resolve(res || (payload as any))
           }
         })
+        if (result) unsubscribe()
       })
     }
 
