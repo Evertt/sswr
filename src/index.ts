@@ -22,6 +22,13 @@ export class SSWR extends SWR {
     const data = writable<D | undefined>(this.get<D>(this.resolveKey(key)), () => () => unsubscribe()) as Data
     const error = writable<E | undefined>(undefined, () => () => unsubscribe());
 
+    // Handlers that will be executed when data changes.
+    const onData = (d: D) => data.set(d)
+    const onError = (e: E) => error.set(e)
+
+    // Subscribe and use the SWR fetch using the given key.
+    unsubscribe = this.use<D, E>(key, onData, onError, options).unsubscribe
+
     data.then = (onfulfilled) => {
       return new Promise(resolve => {
         let result: any = undefined
@@ -37,13 +44,6 @@ export class SSWR extends SWR {
         if (result) unsubscribe()
       })
     }
-
-    // Handlers that will be executed when data changes.
-    const onData = (d: D) => data.set(d)
-    const onError = (e: E) => error.set(e)
-
-    // Subscribe and use the SWR fetch using the given key.
-    unsubscribe = this.use<D, E>(key, onData, onError, options).unsubscribe
 
     // Mutates the current key.
     const mutate = (value: D, options: Partial<SWRMutateOptions<D>>) => {
@@ -61,7 +61,12 @@ export class SSWR extends SWR {
     }
 
     // Return the needed items.
-    return { data, error, mutate, revalidate, clear, unsubscribe }
+    return {
+      data, error, mutate, revalidate, clear, unsubscribe,
+      then: (onfulfilled?: ((value: D) => D | PromiseLike<D>) | null | undefined) => {
+        data.then(onfulfilled).then(() => unsubscribe())
+      }
+    }
   }
 }
 

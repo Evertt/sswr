@@ -16,6 +16,7 @@ declare class SSWR extends SWR {
         revalidate: (options: Partial<SWRRevalidateOptions<D>>) => void;
         clear: (options: Partial<CacheClearOptions>) => void;
         unsubscribe: () => void;
+        then: (onfulfilled?: ((value: D) => D | PromiseLike<D>) | null | undefined) => void;
     };
 }
 /**
@@ -30,9 +31,10 @@ declare const createSWR: <T = any>(options?: Partial<SWROptions<T>>) => {
         revalidate: (options: Partial<SWRRevalidateOptions<D>>) => void;
         clear: (options: Partial<CacheClearOptions>) => void;
         unsubscribe: () => void;
+        then: (onfulfilled?: ((value: D) => D | PromiseLike<D>) | null | undefined) => void;
     };
-    mutate: <D_1 = T>(key: SWRKey, value: D_1, options?: Partial<SWRMutateOptions<D_1>> | undefined) => void;
-    revalidate: <D_2 = T>(key: SWRKey, options?: Partial<SWRRevalidateOptions<D_2>> | undefined) => void;
+    mutate: <D_2 = T>(key: SWRKey, value: D_2, options?: Partial<SWRMutateOptions<D_2>> | undefined) => void;
+    revalidate: <D_3 = T>(key: SWRKey, options?: Partial<SWRRevalidateOptions<D_3>> | undefined) => void;
     clear: (keys?: string | string[] | undefined, options?: Partial<CacheClearOptions> | undefined) => void;
 };
 
