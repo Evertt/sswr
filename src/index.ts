@@ -1,5 +1,5 @@
 import { SWR, SWRKey, SWROptions, SWRMutateOptions, SWRRevalidateOptions, CacheClearOptions } from 'swrev'
-import { writable } from 'svelte/store'
+import { writable, Writable } from 'svelte/store'
 import { SessionCache } from './cache'
 
 /**
@@ -18,18 +18,28 @@ export class SSWR extends SWR {
     let unsubscribe = () => {}
 
     // Contains the data and errors stores.
-    const data = writable<D | undefined>(this.get<D>(this.resolveKey(key)), () => () => unsubscribe())
-    const error = writable<E | undefined>(undefined, () => () => unsubscribe())
+    type Data = Writable<D | undefined> & Promise<D>
+    const data = writable<D | undefined>(this.get<D>(this.resolveKey(key)), () => () => unsubscribe()) as Data
+    const error = writable<E | undefined>(undefined, () => () => unsubscribe());
+
+    data.then = (onfulfilled) => {
+      return new Promise(resolve => {
+        const unsubscribe = data.subscribe(payload => {
+          if (payload !== undefined) {
+            unsubscribe()
+            const res = onfulfilled?.(payload)
+            resolve(res || (payload as any))
+          }
+        })
+      })
+    }
 
     // Handlers that will be executed when data changes.
     const onData = (d: D) => data.set(d)
     const onError = (e: E) => error.set(e)
 
     // Subscribe and use the SWR fetch using the given key.
-    unsubscribe = this.use<D, E>(key, onData, onError, {
-      loadInitialCache: false,
-      ...options,
-    }).unsubscribe
+    unsubscribe = this.use<D, E>(key, onData, onError, options).unsubscribe
 
     // Mutates the current key.
     const mutate = (value: D, options: Partial<SWRMutateOptions<D>>) => {
