@@ -1,5 +1,4 @@
 import { SWR, SWRKey, SWROptions, SWRMutateOptions, SWRRevalidateOptions, CacheClearOptions } from 'swrev'
-import { onDestroy } from 'svelte'
 import { writable } from 'svelte/store'
 
 /**
@@ -31,9 +30,6 @@ export class SSWR extends SWR {
       ...options,
     }).unsubscribe
 
-    // Cleanup code to unsubscribe.
-    onDestroy(() => unsubscribe())
-
     // Mutates the current key.
     const mutate = (value: D, options: Partial<SWRMutateOptions<D>>) => {
       return this.mutate(this.resolveKey(key), value, options)
@@ -50,7 +46,7 @@ export class SSWR extends SWR {
     }
 
     // Return the needed items.
-    return { data, error, mutate, revalidate, clear }
+    return { data, error, mutate, revalidate, clear, unsubscribe }
   }
 }
 
