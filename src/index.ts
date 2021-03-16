@@ -67,12 +67,3 @@ export const createSWR = <D>(options?: Partial<SWROptions<D>>) => {
     clear: (keys?: string | string[], options?: Partial<CacheClearOptions>) => swr.clear(keys, options),
   }
 }
-
-// Default SWR instance to play with.
-const swr = createSWR()
-
-// Default instance exports.
-export const useSWR = swr.useSWR
-export const mutate = swr.mutate
-export const revalidate = swr.revalidate
-export const clear = swr.clear
