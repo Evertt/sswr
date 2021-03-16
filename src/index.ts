@@ -1,5 +1,6 @@
 import { SWR, SWRKey, SWROptions, SWRMutateOptions, SWRRevalidateOptions, CacheClearOptions } from 'swrev'
 import { writable } from 'svelte/store'
+import { SessionCache } from './cache'
 
 /**
  * Exports the extended SWR class with an extra method
@@ -54,12 +55,12 @@ export class SSWR extends SWR {
  * Creates a mew SWR instance and exports basic methods to
  * work with without the need for method calling.
  */
-export const createSWR = <D>(options?: Partial<SWROptions<D>>) => {
-  const swr = new SSWR(options)
+export const createSWR = <T = any>(options: Partial<SWROptions<T>> = {}) => {
+  const swr = new SSWR({ cache: new SessionCache(), ...options })
   return {
-    useSWR: (key: SWRKey, options?: Partial<SWROptions<D>>) => swr.useSvelte(key, options),
-    mutate: (key: SWRKey, value: D, options?: Partial<SWRMutateOptions<D>>) => swr.mutate(key, value, options),
-    revalidate: (key: SWRKey, options?: Partial<SWRRevalidateOptions<D>>) => swr.revalidate(key, options),
+    useSWR: <D = T>(key: SWRKey, options?: Partial<SWROptions<D>>) => swr.useSvelte(key, options),
+    mutate: <D = T>(key: SWRKey, value: D, options?: Partial<SWRMutateOptions<D>>) => swr.mutate(key, value, options),
+    revalidate: <D = T>(key: SWRKey, options?: Partial<SWRRevalidateOptions<D>>) => swr.revalidate(key, options),
     clear: (keys?: string | string[], options?: Partial<CacheClearOptions>) => swr.clear(keys, options),
   }
 }

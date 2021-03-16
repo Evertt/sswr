@@ -1,6 +1,6 @@
 dependencies:
   svelte: 3.35.0
-  swrev: 1.7.0
+  swrev: github.com/Evertt/swrev/2ce32b133cd3fa5cecf5f33644dcd146ab22e253
 devDependencies:
   tsup: 3.12.1_typescript@4.2.3
   typescript: 4.2.3
@@ -669,6 +669,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
+  /rxjs/6.6.6:
+    dependencies:
+      tslib: 1.14.1
+    dev: false
+    engines:
+      npm: '>=2.0.0'
+    resolution:
+      integrity: sha512-/oTwee4N4iWzAMAL9xdGKjkEHmIwupR3oXbQjCKywF1BeFohswF3vZdogbmEF6pZkOsXTzWkrZszrWpQTByYVg==
   /slash/3.0.0:
     dev: true
     engines:
@@ -715,10 +723,6 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-gknlZkR2sXheu/X+B7dDImwANVvK1R0QGQLd8CNIfxxGPeXBmePnxfzb6fWwTQRsYQG7lYkZXvpXJvxvpsoB7g==
-  /swrev/1.7.0:
-    dev: false
-    resolution:
-      integrity: sha512-zIS4CuyRGXVd7CwQOdzswQHselWmbuHQt5Jn6ckVvFOZXXpnM2Z13UxueYUvDJ+Hlp5Dqi8j5tmxtcuE16YT4w==
   /thenify-all/1.6.0:
     dependencies:
       thenify: 3.3.1
@@ -745,6 +749,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
+  /tslib/1.14.1:
+    dev: false
+    resolution:
+      integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
   /tsup/3.12.1_typescript@4.2.3:
     dependencies:
       '@rollup/plugin-node-resolve': 11.2.0_rollup@2.41.4
@@ -782,6 +790,14 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
+  github.com/Evertt/swrev/2ce32b133cd3fa5cecf5f33644dcd146ab22e253:
+    dependencies:
+      rxjs: 6.6.6
+    dev: false
+    name: swrev
+    resolution:
+      tarball: https://codeload.github.com/Evertt/swrev/tar.gz/2ce32b133cd3fa5cecf5f33644dcd146ab22e253
+    version: 1.7.0
 specifiers:
   svelte: ^3.29.4
   swrev: github:Evertt/swrev
