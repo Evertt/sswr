@@ -21,7 +21,7 @@ export class SessionCache extends DefaultCache {
       }))
     }
 
-    setInterval(this.purge.bind(this), 15000)
+    setInterval(() => this.purge(), 15000)
   }
 
   private storage() {
