@@ -31,6 +31,7 @@ export class SessionCache extends DefaultCache {
   }
 
   private purge() {
+    console.log("purging...")
     this.elements.forEach((cacheItem, key) => {
       if (cacheItem.hasExpired()) {
         this.remove(key, { broadcast: false })
