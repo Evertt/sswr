@@ -26,8 +26,7 @@ export class SessionCache extends DefaultCache {
       if (key === memKey) continue
       const value = window.sessionStorage.getItem(key) as string
       const item = JSON.parse(value) as { data: any, expiresAt: string|null }
-      if (!item.expiresAt) continue
-      const expiresAt = new Date(item.expiresAt)
+      const expiresAt = new Date(item.expiresAt || 0)
       if (expiresAt.getTime() >= new Date().getTime()) continue
       this.remove(memKey, { broadcast: false })
     }
