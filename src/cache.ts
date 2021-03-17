@@ -1,35 +1,41 @@
 import { CacheItem, SWRKey, DefaultCache, CacheRemoveOptions } from "swrev"
 
+const PREFIX = 'sswr-'
+
 export class SessionCache extends DefaultCache {
   constructor() {
     super()
-    if (typeof window === 'undefined') return
 
-    for (let i = 0; i < window.sessionStorage.length; i++){
-      const key = window.sessionStorage.key(i) as string
-      const memKey = key.replace(/^sswr-/, '')
-      if (key === memKey) continue;
-      const value = window.sessionStorage.getItem(key) as string
+    const storage = this.storage()
+    if (!storage) return
+
+    for (let i = 0; i < storage.length; i++){
+      const storageKey = storage.key(i) as string
+      const prefix = storageKey.slice(0, PREFIX.length)
+      if (prefix !== PREFIX) continue
+      const key = storageKey.slice(PREFIX.length)
+      const value = storage.getItem(storageKey) as string
       const item = JSON.parse(value) as { data: any, expiresAt: string|null }
-      this.elements.set(memKey, new CacheItem({
+      this.elements.set(key, new CacheItem({
         data: item.data, expiresAt: item.expiresAt ? new Date(item.expiresAt) : null
       }))
     }
 
-    setInterval(() => this.purge(), 15000)
+    setInterval(this.purge, 15000)
+  }
+
+  private storage() {
+    return typeof window !== 'undefined'
+      && 'sessionStorage' in window
+      && window.sessionStorage || null
   }
 
   private purge() {
-    for (let i = 0; i < window.sessionStorage.length; i++){
-      const key = window.sessionStorage.key(i) as string
-      const memKey = key.replace(/^sswr-/, '')
-      if (key === memKey) continue
-      const value = window.sessionStorage.getItem(key) as string
-      const item = JSON.parse(value) as { data: any, expiresAt: string|null }
-      const expiresAt = new Date(item.expiresAt || 0)
-      if (expiresAt.getTime() >= new Date().getTime()) continue
-      this.remove(memKey, { broadcast: false })
-    }
+    this.elements.forEach((cacheItem, key) => {
+      if (cacheItem.hasExpired()) {
+        this.remove(key, { broadcast: false })
+      }
+    })
   }
 
   /**
@@ -37,9 +43,7 @@ export class SessionCache extends DefaultCache {
    */
    remove(key: SWRKey, options?: Partial<CacheRemoveOptions>): void {
     super.remove(key, options)
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.removeItem(`sswr-${key}`)
-    }
+    this.storage()?.removeItem(PREFIX+key)
   }
 
   /**
@@ -58,9 +62,7 @@ export class SessionCache extends DefaultCache {
       value.data = detail
 
       // Store in sessionStorage
-      if (typeof window !== 'undefined') {
-        window.sessionStorage.setItem(`sswr-${key}`, JSON.stringify(value))
-      }
+      this.storage()?.setItem(PREFIX+key, JSON.stringify(value))
 
       // Broadcast the update to all other cache subscriptions.
       this.broadcast(key, detail)

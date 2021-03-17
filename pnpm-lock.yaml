@@ -1,6 +1,6 @@
 dependencies:
   svelte: 3.35.0
-  swrev: github.com/Evertt/swrev/2ce32b133cd3fa5cecf5f33644dcd146ab22e253
+  swrev: github.com/Evertt/swrev/b587216e44a89d117b72b3ee95faed303c648d93
 devDependencies:
   tsup: 3.12.1_typescript@4.2.3
   typescript: 4.2.3
@@ -790,13 +790,13 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
-  github.com/Evertt/swrev/2ce32b133cd3fa5cecf5f33644dcd146ab22e253:
+  github.com/Evertt/swrev/b587216e44a89d117b72b3ee95faed303c648d93:
     dependencies:
       rxjs: 6.6.6
     dev: false
     name: swrev
     resolution:
-      tarball: https://codeload.github.com/Evertt/swrev/tar.gz/2ce32b133cd3fa5cecf5f33644dcd146ab22e253
+      tarball: https://codeload.github.com/Evertt/swrev/tar.gz/b587216e44a89d117b72b3ee95faed303c648d93
     version: 1.7.0
 specifiers:
   svelte: ^3.29.4
