@@ -1,4 +1,4 @@
-import { CacheItem, SWRKey, DefaultCache } from "swrev"
+import { CacheItem, SWRKey, DefaultCache, CacheRemoveOptions } from "swrev"
 
 export class SessionCache extends DefaultCache {
   constructor() {
@@ -14,6 +14,32 @@ export class SessionCache extends DefaultCache {
       this.elements.set(memKey, new CacheItem({
         data: item.data, expiresAt: item.expiresAt ? new Date(item.expiresAt) : null
       }))
+    }
+
+    setInterval(() => this.purge(), 15000)
+  }
+
+  private purge() {
+    for (let i = 0; i < localStorage.length; i++){
+      const key = window.sessionStorage.key(i) as string
+      const memKey = key.replace(/^sswr-/, '')
+      if (key === memKey) continue
+      const value = window.sessionStorage.getItem(key) as string
+      const item = JSON.parse(value) as { data: any, expiresAt: string|null }
+      if (!item.expiresAt) continue
+      const expiresAt = new Date(item.expiresAt)
+      if (expiresAt.getTime() >= new Date().getTime()) continue
+      this.remove(memKey, { broadcast: false })
+    }
+  }
+
+  /**
+   * Removes an key-value pair from the cache.
+   */
+   remove(key: SWRKey, options?: Partial<CacheRemoveOptions>): void {
+    super.remove(key, options)
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.removeItem(`sswr-${key}`)
     }
   }
 
