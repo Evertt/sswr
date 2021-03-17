@@ -20,7 +20,6 @@ export class SessionCache extends DefaultCache {
   }
 
   private purge() {
-    console.log("purging...")
     for (let i = 0; i < window.sessionStorage.length; i++){
       const key = window.sessionStorage.key(i) as string
       const memKey = key.replace(/^sswr-/, '')
@@ -29,9 +28,7 @@ export class SessionCache extends DefaultCache {
       const item = JSON.parse(value) as { data: any, expiresAt: string|null }
       if (!item.expiresAt) continue
       const expiresAt = new Date(item.expiresAt)
-      console.log("Found item to purge")
       if (expiresAt.getTime() >= new Date().getTime()) continue
-      console.log("purging item...")
       this.remove(memKey, { broadcast: false })
     }
   }
